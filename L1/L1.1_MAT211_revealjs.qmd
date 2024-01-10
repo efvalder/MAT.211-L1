@@ -1,0 +1,302 @@
+---
+title: "L-1.1. Applications leading to differential equations"
+subtitle: "`MAT211`. DiffEq. Lecture 1."
+author: "E. Valderrama-Araya, Ph.D.  |  <evalderrama@oru.edu>"
+format: 
+  revealjs:
+    theme: default #beige blood dark default league moon night serif simple sky solarized
+    slide-number: true
+    show-slide-number: print
+  #multiplex: true
+    logo: ORU-logo_LR.jpg
+    footer: "Computing and Mathematics Department. (Dr. V.)"
+    chalkboard: true
+    # css: footnote-floating.css
+number-sections: true
+toc: true
+---
+
+## What is a differential equation? {.scrollable}
+
+::: {.callout-tip}
+## Definition:
+
+A `differential equation` is an equation relating an unknown function and any of its derivatives or differentials
+:::
+
+. . . 
+
+<span style="color: grey;font-size: 0.5em;">*Press "b", and ask class for examples* </span>
+
+
+## Example: Growth and Decay {.scrollable}
+
+::: {.callout-tip collapse="true"}
+
+## Modeling: Growth and Decay
+
+Model $$\boxed{y'=ay}$$\
+Initial Condition (<span style="color: red;">i.c.</span>): $$y(0)=y_0$$
+:::
+
+. . . 
+
+<span style="color: grey;font-size: 0.5em;">*Press "b", Let's solve this together...* </span>
+
+. . . 
+
+::: {.callout-caution collapse="true"}
+## Solution: Growth and Decay
+
+
+```{=tex}
+\begin{align}
+y'&=ay \\
+\frac{dy}{dt} &= a y \quad{\text{(Separation of variables)}}\\
+\frac{dy}{y} &= a dt \\
+\int \frac{1}{y}\,dy &=\int a \,dt\\
+\ln y &= at + c\\
+y&=e^{at+c}\\
+y&=e^{at}e^{c}\\
+y(0)&=y_0\quad\text{(Initial condition)}\\
+\therefore y&=y_0e^{at}
+\end{align}
+```
+
+:::
+
+. . . 
+
+**Question:** How the value of $a$ affect the solution?
+
+<span style="color: grey;font-size: 0.5em;">*Press "b", sketch the "solutions" ...* </span>
+
+
+. . .
+
+::: {.callout-caution collapse="true"}
+## Viz: Growth and Decay
+
+We can use `R` to do the plots:
+
+```{r, echo=TRUE}
+#| echo: fenced
+y0 <- 100
+t <- seq(0, 10, length.out = 100)
+a1 <- 1
+a2 <- -1
+y1 <- y0*exp(a1*t)
+y2 <- y0*exp(a2*t)
+plot(t,y1)
+legend("center", legend= "a>0")
+plot(t,y2)
+legend("center", legend= "a<0")
+```
+
+:::
+
+. . . 
+
+**Note:** You want to see a video example? Click here: @sec-ref
+
+## Example: Newton's law of cooling {.scrollable}
+
+::: {.callout-tip}
+
+## Newton's law of cooling
+
+$$\boxed{\frac{dT}{dt}=-k(T-T_{env})}\quad T(0)=T_0;\quad k>0$$
+:::
+. . . 
+
+<span style="color: grey;font-size: 0.5em;">*Press "b", How we solve this? ...* </span>
+
+. . . 
+
+::: {.callout-caution collapse="true"}
+
+## Solution: Newton's law of cooling
+
+```{=tex}
+\begin{align}
+\int \frac{1}{T-T_{env}}dT&=\int -kdt\\
+\ln (T-T_{env}) &= -kt+C\\
+T-T_{env} &= e^{-kt+C}\\
+T-T_{env} &= e^{-kt}e^{C}\quad\Rightarrow\text{(Initial conditions)}\\
+T-T_{env} &= e^{-kt}(T_0-T_{env})\\
+T&=T_{env}+(T_0-T_{env})e^{-kt}
+\end{align}
+```
+
+:::
+
+. . . 
+
+<!-- ## Sol. Curves: Newton's law of cooling {.scrollable} -->
+
+::: {.callout-caution collapse="true"}
+## Solution Curves: Newton's law of cooling
+
+```{r, echo=TRUE}
+#| echo: fenced
+T0 <- 1000
+Tenv <- 300
+k <- 1
+t <- seq(0, 10, length.out = 100)
+y <- Tenv + (T0-Tenv)*exp(-k*t)
+plot(t,y, ylim = c(0,1000))
+legend("center", legend="Converging to Tenv")
+```
+:::
+
+## Newton's Second Law {.scrollable}
+
+::: {.callout-tip}
+## Newton's Second Law
+
+"Force is equal to the rate of change of momentum" $$\boxed{F=\frac{d}{dt}(mv)}$$ If `mass` is constant then $F=m\frac{dv}{dt}=ma$
+:::
+
+. . . 
+
+::: {.callout-caution collapse="true"}
+## Solution
+\begin{align}
+\frac{dx^2}{dt^2}&=\frac{F(t)}{m}\\
+\text{Integrating:}\\
+v(t)&=v_0+\frac{1}{m}\int_0^t F(\tau)d\tau
+\end{align}
+:::
+
+## Definition to be a solution of diffyQ {.scrollable}
+
+::: {.callout-tip}
+## Definition
+
+A function $y(x)$ is said to be a `solution` to a differential equation $\Leftrightarrow$ an identity results when the corresponding values for $y(x)$ and its derivatives are substituted into the equation.
+:::
+
+. . . 
+
+::: {.callout-caution collapse="true"}
+## Example
+
+Verify that $y=e^x+x+7$ is a solution to $$\frac{dy}{dx}-y+x=-6$$
+:::
+
+. . .
+
+<span style="color: grey;font-size: 0.5em;">*Press "c", Let's check if its solution ...* </span>
+
+. . .
+
+::: {.callout-caution collapse="true"}
+## Solution:
+
+```{=tex}
+\begin{align}
+\frac{dy}{dx}-y+x&=-6\quad\text{(expanding the left side:)}\\
+\frac{d}{dx}(e^x+x+7)-(e^x+x+7)+x&=-6\\
+e^x+1-e^x-x-7+x&=-6\\
+-6&=-6
+\end{align}
+```
+😁
+:::
+
+## Explicit and Implicit form of a solution
+
+::: {.callout-tip}
+## Definition
+
+1.  A solution is in an `explicit form` $\Leftrightarrow y=f(x)$
+2.  A solution is in an `implicit form` $\Leftrightarrow f(x,y)=0$
+:::
+
+## Is the sol. of a diffyQ always unique? {.scrollable}
+
+::: {.callout-warning collapse="true"}
+## **Q:** Is the solution of a diffyQ always unique?
+
+:::
+
+. . . 
+
+A: No
+
+. . .
+
+::: {.callout-caution collapse="true"}
+## Example ^[<https://en.wikipedia.org/wiki/Harmonic_oscillator>]
+
+$$\frac{d^2y}{dx^2}+y=0$$
+:::
+
+. . . 
+
+::: {.callout-caution collapse="true"}
+## Solution:
+
+:::
+
+. . .
+
+By inspection we observe that two different functions satisfy:
+
+```{=tex}
+\begin{align}
+y_1&=\cos x\\
+y_2&=\sin x\\
+\end{align}
+```
+
+. . .
+
+Therefore the most `General Solution` is a Linear Combination of the particular solutions:
+
+$$ \boxed{y = C_1\cos x + C_2\sin x }$$
+
+## Does every diffyQ have a sol$^\underline{n}$ ?{.scrollable}
+
+::: {.callout-warning}
+## **Q:** Does every diffyQ have a sol$^\underline{n}$ ?
+
+:::
+
+. . .
+
+A: No
+
+. . .
+
+::: {.callout-caution collapse="true"}
+## Example
+
+$$\left(\frac{dy}{dx}\right)^2+1=0$$
+:::
+
+. . .
+
+Any solution to this eq$^\underline{n}$ would have an `imaginary` slope!
+
+Thus no-real solution!^[interested in imaginary? $\Rightarrow$ PHY:455<https://syllabi.oru.edu/?id=28002>]
+
+
+## Have questions ?
+
+Schedule Office Hours with your Instructor Here!
+
+<!-- Calendly inline widget begin -->
+<div class="calendly-inline-widget" data-url="https://calendly.com/evalderrama/officehours" style="min-width:320px;height:630px;"></div>
+<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+<!-- Calendly inline widget end -->
+
+
+## References {#sec-ref}
+
+1.  Exponential growth and decay. <https://en.wikipedia.org/wiki/Exponential_growth>
+2.  Newton law of cooling. <https://en.wikipedia.org/wiki/Newton%27s_law_of_cooling>
+3.  Harmonic oscillator. <https://en.wikipedia.org/wiki/Harmonic_oscillator>
+4.  Khan: Modeling population with simple differential equation. <https://youtu.be/IYFkXWlgC_w?feature=shared>
+<!-- 3.  Quarto revealjs. <https://quarto.org/docs/presentations/revealjs/themes.html> -->
+<!-- 4.  Quarto callouts. <https://quarto.org/docs/authoring/callouts.html> -->
